@@ -9,21 +9,23 @@
   const videos = content.videos.length ? content.videos : demos;
   let category = '全部';
   let lastTrigger;
-  document.title = content.title;
+  const page = document.body.dataset.page || 'home';
+  document.title = page === 'home' ? content.title : `${page === 'about' ? '关于我' : '学习视频'} · ${content.name}`;
+  if (page === 'home' && ['#about', '#videos'].includes(location.hash)) { location.replace(new URL(location.hash === '#about' ? './about.html' : './videos.html', location.href)); return; }
   document.querySelectorAll('[data-site-name]').forEach(el => el.textContent = content.name + '.');
-  $('#hero-intro').textContent = content.intro;
-  $('#bio').textContent = content.bio;
+  if ($('#hero-intro')) $('#hero-intro').textContent = content.intro;
+  if ($('#bio')) $('#bio').textContent = content.bio;
   $('#footer-name').textContent = content.title;
   $('#year').textContent = new Date().getFullYear();
-  $('#profile-tags').replaceChildren(...content.tags.map(tag => { const el = document.createElement('span'); el.textContent = tag; return el; }));
+  $('#profile-tags')?.replaceChildren(...content.tags.map(tag => { const el = document.createElement('span'); el.textContent = tag; return el; }));
   function safeUrl(value) {
     if (!value) return null;
     try { const url = new URL(value, location.href); return ['http:', 'https:'].includes(url.protocol) ? url.href : null; } catch { return null; }
   }
   const github = safeUrl(content.github);
   if (github) { $('#github-link').href = github; $('#github-link').textContent = 'GitHub ↗'; $('#github-link').target = '_blank'; $('#github-link').rel = 'noopener noreferrer'; }
-  $('#preview-note').hidden = !!content.videos.length;
-  $('#video-count').textContent = content.videos.length ? `${content.videos.length} 条视频 · 持续更新` : '视频空间 · 筹备中';
+  if ($('#preview-note')) $('#preview-note').hidden = !!content.videos.length;
+  if ($('#video-count')) $('#video-count').textContent = content.videos.length ? `${content.videos.length} 条视频 · 持续更新` : '视频空间 · 筹备中';
   function showVideo(v, trigger) {
     const dialog = $('#video-dialog');
     lastTrigger = trigger;
@@ -67,12 +69,12 @@
     category = button.dataset.category;
     document.querySelectorAll('.filter').forEach(b => { b.classList.toggle('active', b === button); b.setAttribute('aria-pressed', String(b === button)); }); render();
   }));
-  $('#search').addEventListener('input', render);
-  $('#reset-search').addEventListener('click', () => { $('#search').value = ''; document.querySelector('.filter').click(); });
-  $('#close-dialog').addEventListener('click', () => $('#video-dialog').close());
-  $('#video-dialog').addEventListener('click', e => { if (e.target === e.currentTarget) { const r = e.currentTarget.getBoundingClientRect(); if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) e.currentTarget.close(); } });
-  $('#video-dialog').addEventListener('close', () => { $('#player').replaceChildren(); lastTrigger?.focus(); });
-  render();
+  $('#search')?.addEventListener('input', render);
+  $('#reset-search')?.addEventListener('click', () => { $('#search').value = ''; document.querySelector('.filter').click(); });
+  $('#close-dialog')?.addEventListener('click', () => $('#video-dialog').close());
+  $('#video-dialog')?.addEventListener('click', e => { if (e.target === e.currentTarget) { const r = e.currentTarget.getBoundingClientRect(); if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) e.currentTarget.close(); } });
+  $('#video-dialog')?.addEventListener('close', () => { $('#player').replaceChildren(); lastTrigger?.focus(); });
+  if ($('#video-grid')) render();
   // Motion is optional, honors the system preference, and never changes scrolling.
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
   let savedMotion = null;
@@ -87,7 +89,7 @@
   $('#motion-toggle').addEventListener('click', () => { motion = !motion; savedMotion = motion ? 'on' : 'off'; try { localStorage.setItem('frist-motion', savedMotion); } catch {} updateMotion(); });
   reducedMotion.addEventListener('change', e => { motion = !e.matches && savedMotion !== 'off'; updateMotion(); });
   updateMotion();
-  const revealTargets = document.querySelectorAll('.section-heading, .library-toolbar, .about-intro, .about-row, .closing');
+  const revealTargets = document.querySelectorAll('.section-heading, .library-toolbar, .about-intro, .about-row, .closing, .portal');
   if ('IntersectionObserver' in window) {
     const observer = new IntersectionObserver(entries => entries.forEach(entry => {
       if (entry.isIntersecting) { entry.target.classList.remove('pending'); observer.unobserve(entry.target); }
@@ -100,9 +102,9 @@
   addEventListener('resize', setProgress); setProgress();
   if (matchMedia('(hover:hover) and (pointer:fine)').matches) {
     const art = $('.hero-art');
-    art.addEventListener('pointermove', e => { if (!motion) return; const r = art.getBoundingClientRect(); art.style.setProperty('--tilt-x', `${-(e.clientY - r.top - r.height/2) / 25}deg`); art.style.setProperty('--tilt-y', `${(e.clientX - r.left - r.width/2) / 25}deg`); });
-    art.addEventListener('pointerleave', () => { art.style.setProperty('--tilt-x', '0deg'); art.style.setProperty('--tilt-y', '0deg'); });
-    $('#video-grid').addEventListener('pointermove', e => { const card = e.target.closest('.video-card'); if (!motion || !card) return; const r = card.getBoundingClientRect(); card.style.setProperty('--card-x', `${-(e.clientY-r.top-r.height/2)/65}deg`); card.style.setProperty('--card-y', `${(e.clientX-r.left-r.width/2)/45}deg`); });
-    $('#video-grid').addEventListener('pointerout', e => { const card = e.target.closest('.video-card'); if (card && !card.contains(e.relatedTarget)) { card.style.setProperty('--card-x', '0deg'); card.style.setProperty('--card-y', '0deg'); } });
+    art?.addEventListener('pointermove', e => { if (!motion) return; const r = art.getBoundingClientRect(); art.style.setProperty('--tilt-x', `${-(e.clientY - r.top - r.height/2) / 25}deg`); art.style.setProperty('--tilt-y', `${(e.clientX - r.left - r.width/2) / 25}deg`); });
+    art?.addEventListener('pointerleave', () => { art.style.setProperty('--tilt-x', '0deg'); art.style.setProperty('--tilt-y', '0deg'); });
+    $('#video-grid')?.addEventListener('pointermove', e => { const card = e.target.closest('.video-card'); if (!motion || !card) return; const r = card.getBoundingClientRect(); card.style.setProperty('--card-x', `${-(e.clientY-r.top-r.height/2)/65}deg`); card.style.setProperty('--card-y', `${(e.clientX-r.left-r.width/2)/45}deg`); });
+    $('#video-grid')?.addEventListener('pointerout', e => { const card = e.target.closest('.video-card'); if (card && !card.contains(e.relatedTarget)) { card.style.setProperty('--card-x', '0deg'); card.style.setProperty('--card-y', '0deg'); } });
   }
 })();

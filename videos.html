@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="学习视频馆：分类浏览、搜索与观看学习视频。">
+  <meta name="theme-color" content="#121411">
+  <title>学习视频 · FRIST</title>
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./exhibit.css">
+  <script src="./site-content.js" defer></script>
+  <script src="./app.js" defer></script>
+</head>
+<body id="top" data-page="videos">
+  <div class="reading-progress" aria-hidden="true"></div>
+  <a class="skip" href="#main">跳到正文</a>
+  <header class="header wrap">
+    <a class="brand" href="./index.html" aria-label="回到首页"><span class="brand-icon">↗</span><span data-site-name>FRIST.</span></a>
+    <nav aria-label="主导航"><a class="nav-link" href="./index.html">首页</a><a class="nav-link" href="./about.html">关于我</a><a class="nav-link" href="./videos.html" aria-current="page">学习视频</a><a class="nav-pill" id="github-link" href="./about.html">认识一下 <span aria-hidden="true">↗</span></a></nav>
+  </header>
+  <main id="main">
+    <div class="breadcrumb wrap"><a href="./index.html">首页</a><span aria-hidden="true">/</span><span aria-current="page">学习视频</span></div>
+    <section class="videos-section wrap" id="videos" aria-labelledby="videos-title">
+      <div class="section-heading"><div><p class="eyebrow">01 / LEARNING LIBRARY</p><h1 id="videos-title">把学到的，分享出来<span class="accent">。</span></h1><p class="section-description">一些简单、实用的学习视频，陪你从「不太懂」走向「我会了」。</p></div><span class="section-side" id="video-count">视频空间 · 筹备中</span></div>
+      <div class="library-toolbar"><div class="filters" role="group" aria-label="按视频分类筛选"><button class="filter active" data-category="全部" aria-pressed="true">全部</button><button class="filter" data-category="编程入门" aria-pressed="false">编程入门</button><button class="filter" data-category="学习方法" aria-pressed="false">学习方法</button><button class="filter" data-category="随手记录" aria-pressed="false">随手记录</button></div><label class="search"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="搜索视频或关键词" aria-label="搜索视频"></label></div>
+      <p id="preview-note" class="preview-note">栏目预览 · 以下为排版示例，正式视频将在发布后替换。</p>
+      <div class="video-grid" id="video-grid" aria-live="polite"></div>
+      <div class="empty-state" id="empty-state" hidden><span aria-hidden="true">⌕</span><h3>暂时还没有相关视频</h3><p>换一个关键词，或看看其他分类。</p><button class="button secondary" id="reset-search">查看全部</button></div>
+      <div class="library-foot"><span><span class="status-dot"></span> 一个慢慢生长的学习视频馆</span><span>KEEP LEARNING, KEEP SHARING ↗</span></div>
+    </section>
+  </main>
+  <footer class="footer wrap"><a class="brand" href="./index.html"><span class="brand-icon">↗</span><span data-site-name>FRIST.</span></a><span>© <span id="year"></span> <span id="footer-name">FRIST · 个人学习空间</span></span><button id="motion-toggle" class="motion-toggle" aria-pressed="true">动效：开</button><a href="#">回到顶部 ↑</a></footer>
+  <dialog id="video-dialog" aria-labelledby="dialog-title"><div class="dialog-top"><span class="eyebrow">LEARNING LIBRARY</span><button id="close-dialog" aria-label="关闭视频">✕</button></div><h2 id="dialog-title"></h2><div id="player"></div><p id="dialog-description"></p></dialog>
+</body>
+</html>
