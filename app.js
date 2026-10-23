@@ -24,7 +24,7 @@
     try { const url = new URL(value, location.href); return ['http:', 'https:'].includes(url.protocol) ? url.href : null; } catch { return null; }
   }
   const github = safeUrl(content.github);
-  if (github) { $('#github-link').href = github; $('#github-link').textContent = 'GitHub ↗'; $('#github-link').target = '_blank'; $('#github-link').rel = 'noopener noreferrer'; }
+  if (github && $('#github-link')) { $('#github-link').href = github; $('#github-link').textContent = 'GitHub ↗'; $('#github-link').target = '_blank'; $('#github-link').rel = 'noopener noreferrer'; }
   if ($('#preview-note')) $('#preview-note').hidden = !!content.videos.length;
   if ($('#video-count')) $('#video-count').textContent = content.videos.length ? `${content.videos.length} 条视频 · 持续更新` : '视频空间 · 筹备中';
   function showVideo(v, trigger) {
@@ -109,3 +109,4 @@
     $('#video-grid')?.addEventListener('pointerout', e => { const card = e.target.closest('.video-card'); if (card && !card.contains(e.relatedTarget)) { card.style.setProperty('--card-x', '0deg'); card.style.setProperty('--card-y', '0deg'); } });
   }
 })();
+
