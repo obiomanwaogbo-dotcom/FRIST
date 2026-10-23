@@ -1,0 +1,21 @@
+(() => {
+  const all=window.COURSES||[],q=s=>document.querySelector(s);
+  let completed={};try{completed=JSON.parse(localStorage.getItem('frist-learning')||'{}')||{};}catch{}
+  const count=id=>(completed[id]||[]).filter(i=>Number.isInteger(i)&&i>=0&&i<4).length;
+  function card(c){return `<a class="course-card ${c.color}" href="./course.html?subject=${c.id}"><div class="course-card-top"><span>${c.tag}</span><span>↗</span></div><div class="course-symbol" aria-hidden="true">${c.icon}</div><span class="course-code">${c.en}</span><h3>${c.name}</h3><p>${c.intro}</p><div class="course-card-bottom"><span>4 个学习单元 · 配套实验</span><span>${count(c.id)}/4 已学</span></div><div class="card-progress" style="--done:${count(c.id)/4*100}%"></div></a>`;}
+  if(q('#home-courses'))q('#home-courses').innerHTML=all.map(card).join('');
+  if(q('#catalog')){let tag='全部';const render=()=>{const search=q('#course-search').value.trim().toLowerCase(),found=all.filter(c=>(tag==='全部'||c.tag===tag)&&`${c.name} ${c.intro} ${c.units.map(u=>u[0]).join(' ')}`.toLowerCase().includes(search));q('#catalog').innerHTML=found.map(card).join('');q('#catalog-empty').hidden=found.length>0;};q('#course-search').addEventListener('input',render);document.querySelectorAll('[data-filter]').forEach(b=>b.addEventListener('click',()=>{tag=b.dataset.filter;document.querySelectorAll('[data-filter]').forEach(x=>{x.classList.toggle('selected',x===b);x.setAttribute('aria-pressed',String(x===b));});render();}));render();}
+  if(!q('#unit-content'))return;
+  const id=new URLSearchParams(location.search).get('subject')||'calc1',course=all.find(c=>c.id===id);
+  if(!course){q('#course-name').textContent='没有找到这门课程';q('#course-intro').textContent='请返回课程地图选择课程。';q('.course-layout').hidden=true;q('.course-extras').hidden=true;return;}
+  document.title=`${course.name} · FRIST`;document.body.classList.add(course.color);
+  q('#course-name').textContent=course.name;q('#course-en').textContent=course.en;q('#course-intro').textContent=course.intro;q('#course-icon').textContent=course.icon;q('#prereq').textContent='建议先修：'+course.prereq;q('#course-category').textContent=course.tag;
+  q('#course-lab').href='./lab.html?mode='+course.lab;q('#study-methods').innerHTML=course.method.map(m=>`<li>${m}</li>`).join('');q('#quiz-question').textContent=course.quiz[0];q('#quiz-answer').textContent=course.quiz[1];q('#source-link').href=course.source;q('#source-link').textContent=course.sourceName+' ↗';
+  let unit=0;const savedUnit=Number(new URLSearchParams(location.search).get('unit'));if(Number.isInteger(savedUnit)&&savedUnit>=0&&savedUnit<4)unit=savedUnit;
+  function render(){const u=course.units[unit],done=(completed[id]||[]).includes(unit);q('#unit-nav').innerHTML=course.units.map((x,i)=>`<button data-unit="${i}" aria-pressed="${i===unit}" class="${i===unit?'selected':''}"><span>${(completed[id]||[]).includes(i)?'✓':String(i+1).padStart(2,'0')}</span>${x[0]}</button>`).join('');
+    q('#unit-content').innerHTML=`<div class="section-kicker">单元 ${unit+1} / 4</div><h2>${u[0]}</h2><p class="lesson-goal">${u[1]}</p><div class="formula-box">${u[2]}</div><h3>怎么学</h3><p>${u[3]}</p><div class="example-box"><span>跟着算一次</span><p>${u[4]}</p></div><div class="pitfall"><b>容易忽略</b><p>${u[5]}</p></div><div class="lesson-actions"><button id="mark-unit" class="button study-primary" aria-pressed="${done}">${done?'✓ 已学过 · 点击撤销':'标记本单元已学'}</button><button id="next-unit" class="button study-outline" ${unit===3?'disabled':''}>下一单元 →</button></div><p class="subtle">进度只保存在当前浏览器，表示你手动标记的阅读进度。</p>`;
+    q('#course-progress').style.width=count(id)/4*100+'%';q('#progress-label').textContent=`已学 ${count(id)} / 4 个单元`;
+    document.querySelectorAll('[data-unit]').forEach(b=>b.addEventListener('click',()=>{unit=Number(b.dataset.unit);render();}));
+    q('#mark-unit').addEventListener('click',()=>{let v=completed[id]||[];completed[id]=v.includes(unit)?v.filter(i=>i!==unit):[...v,unit];let saved=true;try{localStorage.setItem('frist-learning',JSON.stringify(completed));}catch{saved=false;}render();if(!saved)q('#progress-label').textContent+='（浏览器禁止存储，本次进度仅在此页面有效）';});q('#next-unit').addEventListener('click',()=>{unit=Math.min(3,unit+1);render();});
+  }render();
+})();

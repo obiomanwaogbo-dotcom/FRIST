@@ -10,7 +10,8 @@
   let category = '全部';
   let lastTrigger;
   const page = document.body.dataset.page || 'home';
-  document.title = page === 'home' ? content.title : `${page === 'about' ? '关于我' : '学习视频'} · ${content.name}`;
+  const pageTitles = {home:'理工学习站',courses:'课程地图',course:'学习路线',lab:'交互实验台',about:'关于我',videos:'学习视频'};
+  document.title = `${pageTitles[page] || '理工学习站'} · ${content.name}`;
   if (page === 'home' && ['#about', '#videos'].includes(location.hash)) { location.replace(new URL(location.hash === '#about' ? './about.html' : './videos.html', location.href)); return; }
   document.querySelectorAll('[data-site-name]').forEach(el => el.textContent = content.name + '.');
   if ($('#hero-intro')) $('#hero-intro').textContent = content.intro;

@@ -1,29 +1,26 @@
-# FRIST · 个人学习空间
+# FRIST · 理工学习站
 
-保持原有深色首屏、荧光绿点缀与可关闭的动效，采用三个独立页面：
+中文理工学习网站：六门课、24 个起步单元和六个交互实验。使用原生 HTML、CSS、JavaScript，无需安装前端依赖。
 
-- `index.html`：首页与入口。
-- `about.html`：个人介绍、标签与学习方向。
-- `videos.html`：视频分类、搜索、视频链接或 MP4 播放器。
+## 页面
 
-统一导航支持页面间跳转，并标示当前页面。旧首页 `#about` 和 `#videos` 链接会自动跳到新页面。
+- index.html：学习站首页，可拖动三维曲面与课程入口。
+- courses.html：课程分类与搜索。
+- course.html?subject=calc1：学习路线、方法、例题、易错点和自测。subject 还可取 calc2、complex、probability、analog、digital。
+- lab.html：交互实验，mode 可取 surface、calculus、complex、probability、analog、digital。
+- about.html：独立个人介绍。
+- videos.html：保留旧视频链接，视频暂不作为主导航。
 
-## 更新资料和视频
+## 更新内容
 
-编辑 `site-content.js` 中的 `name`、`title`、`intro`、`bio`、`tags`、`github`、`videos` 即可。
+个人资料在 site-content.js，课程在 courses-data.js。learning.js 管理课程交互及浏览器本地阅读进度。experiments.js 绘制实验，lab-math.js 存放可独立验证的数值模型。资料与模型条件见 SOURCES.md。
 
-视频分类可用 `编程入门`、`学习方法`、`随手记录`。`type: 'link'` 打开视频平台网页；`type: 'mp4'` 在站内播放可访问的 MP4 视频直链。`cover` 可以留空或使用相对图片路径。文件内附有添加示例。
+## 发布和预览
 
-尚未添加真实视频时，视频馆显示明确标注的栏目预览。添加第一条真实视频后，全部示例自动隐藏。
+站点：https://obiomanwaogbo-dotcom.github.io/FRIST/
 
-## 发布
+main 分支提交后由 .github/workflows/deploy.yml 部署。文件使用相对链接，兼容仓库子路径。本地可直接打开 HTML，或运行 python -m http.server 4173。
 
-站点托管在 GitHub Pages：https://obiomanwaogbo-dotcom.github.io/FRIST/
+三维图不依赖外部三维库。首屏可见且动效开启时自动旋转；实验区按用户操作重绘。支持手机布局、键盘和减少动态效果偏好。字体不可用时回退系统字体。
 
-仓库采用 Pages 的 main 分支根目录发布，提交后 GitHub 自动部署，无需额外构建。所有资源使用相对路径，支持仓库子路径。
-
-## 本地预览
-
-无需安装依赖。可直接打开 HTML 文件，或在此目录运行 `python -m http.server 4173`，访问 `http://localhost:4173`。
-
-字体从 Google Fonts 加载，不可用时回退系统字体。动效遵循减少动态效果的系统偏好，也可使用页脚开关关闭。
+这是一版可运行的学习导览与理想模型实验站；未接入任意电路编辑器、SPICE、账号系统、云端进度或视频存储。
