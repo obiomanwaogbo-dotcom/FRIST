@@ -109,4 +109,3 @@
     $('#video-grid')?.addEventListener('pointerout', e => { const card = e.target.closest('.video-card'); if (card && !card.contains(e.relatedTarget)) { card.style.setProperty('--card-x', '0deg'); card.style.setProperty('--card-y', '0deg'); } });
   }
 })();
-
